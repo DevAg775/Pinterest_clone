@@ -2,8 +2,8 @@ const express = require("express");
 const app = express();
 const passport = require("passport");
 const expressSession = require("express-session")
-// const localStrategy = require("passport-local");
 const path = require("path");
+const flash = require("connect-flash")
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -17,7 +17,7 @@ const userModel = require("./routes/users")
 connectDB();
 
 app.set("view engine",'ejs')
-
+app.use(flash())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

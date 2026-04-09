@@ -40,12 +40,16 @@ router.get('/',function(req,res){
     res.render('index')
 })
 
-router.get("/profile", isLoggedIn, function(req,res,next){
-    res.render("profile")
+router.get("/profile", isLoggedIn,async function(req,res,next){
+    const user = await userModel.findOne({
+        username: req.session.passport.user
+    })
+    res.render("profile",{user})
 })
 
-router.get('/login',function(req,res){
-    res.render('login')
+router.get('/login',function(req,res,next){
+    // console.log(req.flash("error"))
+    res.render('login',{error: req.flash('error')})
 })
 
 router.get('/feed',function(req,res){
@@ -78,7 +82,8 @@ router.post("/register", async function(req, res) {
 
 router.post("/login",passport.authenticate("local", {
     successRedirect: "/profile",
-    failureRedirect: "/login"
+    failureRedirect: "/login",
+    failureFlash: true,
 }), function(req,res){
 });
 
